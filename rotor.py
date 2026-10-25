@@ -211,18 +211,42 @@ if (__name__ == "__main__"):
       
  instance1 = rotor()
 #  instance1.printDicts()
- cipherText = instance1.encrypt("TESTING MY ROTORS")
- print(f"Cipher text: {cipherText}\n")
+ cipherText = instance1.encrypt("NEW YEAR")
+ print(f"\nCipher text: {cipherText}\n")
 
 #  instance1.printDicts()
 
  pt = instance1.decrypt(cipherText)
  print(f"Plain text: {pt}")
 
- cipherText = instance1.encrypt("TESTING MY ROTORS")
- print(f"\n\nSecond Cipher text: {cipherText}\n")
+ print("\nTesting rotation of rotors after first encryption: ")
+ cipherText = instance1.encrypt("NEW YEAR")
+ print(f"\nSecond Cipher text: {cipherText}\n")
 
 #  instance1.printDicts()
 
  pt = instance1.decrypt(cipherText)
  print(f"Second Plain text: {pt}")
+
+ print("\n\nNow, for the others: \n")
+
+ cipherText = instance1.encrypt("HELLO")
+ print(f"Cipher text: {cipherText}\n")
+
+#  instance1.printDicts()
+
+ pt = instance1.decrypt(cipherText)
+ print(f"Plain text: {pt}\n")
+
+
+ cipherText = instance1.encrypt("HOPE")
+ print(f"Cipher text: {cipherText}\n")
+
+#  instance1.printDicts()
+
+ pt = instance1.decrypt(cipherText)
+ print(f"Plain text: {pt}\n")
+
+
+
+
