@@ -15,14 +15,13 @@ class rotor():
                 , 'G' : 6, 'H' : 7, 'I' : 8, 'J' : 9, 'K' : 10, 'L' : 11
             , 'M' : 12, 'N' : 13, 'O' : 14, 'P' : 15, 'Q' : 16, 'R' : 17, 'S' : 18,
             'T' : 19 , 'U' : 20, 'V' : 21, 'W' : 22, 'X' : 23, 'Y' : 24, 'Z' : 25}
-   seed(42)
    letterLists = []
    numberLists = []
 
 
 
-   def __init__(self):
-
+   def __init__(self, randSeed):
+      seed(randSeed)
       letters1 = list(self.alphabetDict.keys())
       shuffle(letters1)
       self.letterLists.append(letters1)
@@ -82,6 +81,18 @@ class rotor():
          for numbers, letters in zip(self.numberLists[i], self.letterLists[i]):
             if(letters not in self.exitDicts[i-3]):
                self.exitDicts[i-3][numbers] = letters
+
+      self.revEntryRotor1 = {value: key for key,value in self.entryDicts[0].items()}
+      self.revExitRotor1 = {value: key for key,value in self.exitDicts[0].items()}
+
+      self.revEntryRotor2 = {value: key for key,value in self.entryDicts[1].items()}
+      self.revExitRotor2 = {value: key for key,value in self.exitDicts[1].items()}
+
+      self.revEntryRotor3 = {value: key for key,value in self.entryDicts[2].items()}
+      self.revExitRotor3 = {value: key for key,value in self.exitDicts[2].items()}      #i use this to reverse the dict, found it out through stack overflow (Very cool stuff)
+
+
+
 
    def rotate(self):
       self.letterLists = []
@@ -144,10 +155,12 @@ class rotor():
             if(letters not in self.entryDicts[i]):
                self.entryDicts[i][letters] = numbers
 
+
       for i in range(3,6):
          for numbers, letters in zip(self.numberLists[i], self.letterLists[i]):
             if(letters not in self.exitDicts[i-3]):
                self.exitDicts[i-3][numbers] = letters
+
 
    def printDicts(self):
     print(self.entryDicts,"\n")
@@ -161,27 +174,28 @@ class rotor():
                 cipherText += " "
             else:
                 tempNum1 = self.entryDicts[0][char]
-                self.revEntryRotor1 = {value: key for key,value in self.entryDicts[0].items()}
                 tempLetter1 = self.exitDicts[0][tempNum1]
-                self.revExitRotor1 = {value: key for key,value in self.exitDicts[0].items()}
 
 
                 tempNum2 = self.entryDicts[1][tempLetter1]
-                self.revEntryRotor2 = {value: key for key,value in self.entryDicts[1].items()}
-
                 tempLetter2 = self.exitDicts[1][tempNum2]
-                self.revExitRotor2 = {value: key for key,value in self.exitDicts[1].items()}
 
 
                 tempNum3 = self.entryDicts[2][tempLetter2]
-                self.revEntryRotor3 = {value: key for key,value in self.entryDicts[2].items()}
-
                 cipherLetter = self.exitDicts[2][tempNum3]
-                self.revExitRotor3 = {value: key for key,value in self.exitDicts[2].items()}      #i use this to reverse the dict, found it out through stack overflow (Very cool stuff)
-
-
                 cipherText += cipherLetter
+        self.revEntryRotor1 = {value: key for key,value in self.entryDicts[0].items()}
+        self.revExitRotor1 = {value: key for key,value in self.exitDicts[0].items()}
+
+        self.revEntryRotor2 = {value: key for key,value in self.entryDicts[1].items()}
+        self.revExitRotor2 = {value: key for key,value in self.exitDicts[1].items()}
+        
+        self.revEntryRotor3 = {value: key for key,value in self.entryDicts[2].items()}
+        self.revExitRotor3 = {value: key for key,value in self.exitDicts[2].items()}  
         self.rotate()
+
+    #i use this to reverse the dict, found it out through stack overflow (Very cool stuff)
+
         return(cipherText)
 
 
@@ -209,7 +223,7 @@ class rotor():
 
 if (__name__ == "__main__"):
       
- instance1 = rotor()
+ instance1 = rotor(randSeed=42)
 #  instance1.printDicts()
  cipherText = instance1.encrypt("NEW YEAR")
  print(f"\nCipher text: {cipherText}\n")
