@@ -92,4 +92,53 @@ def round_keys(key):
         keys.append(permute(c + d, PC2))
     return keys
 
+def feistel(right, key):
+    mixed = xor(permute(right, E), key)
+    output = ''
+    for index in range(8):
+        six = mixed[index * 6:(index + 1) * 6]
+        row = int(six[0] + six[5], 2)
+        col = int(six[1:5], 2)
+        output += f'{SBOXES[index][row][col]:04b}'
+    return permute(output, P)
+
+
+def des_block(block, keys):
+    bits = ''.join(f'{byte:08b}' for byte in block)
+    bits = permute(bits, IP)
+    left, right = bits[:32], bits[32:]
+    for key in keys:
+        left, right = right, xor(left, feistel(right, key))
+    result = permute(right + left, FP)
+    return int(result, 2).to_bytes(8, 'big')
+
+
+class DES:
+    def __init__(self, key):
+        if isinstance(key, str):
+            key = key.encode('utf-8')
+        self.keys = round_keys(key)
+
+    def encrypt(self, plaintext):
+        if isinstance(plaintext, str):
+            plaintext = plaintext.encode('utf-8')
+        padding = 8 - (len(plaintext) % 8)
+        padded = plaintext + bytes([padding]) * padding
+        return b''.join(des_block(padded[i:i+8], self.keys)
+                        for i in range(0, len(padded), 8))
+
+    def decrypt(self, ciphertext):
+        padded = b''.join(des_block(ciphertext[i:i+8], self.keys[::-1])
+                          for i in range(0, len(ciphertext), 8))
+        padding = padded[-1]
+        return padded[:-padding]
+
+
+if __name__ == '__main__':
+    cipher = DES('12345678')
+    for message in ['NEW YEAR', 'HELLO', 'HOPE']:
+        encrypted = cipher.encrypt(message)
+        decrypted = cipher.decrypt(encrypted).decode('utf-8')
+        assert decrypted == message
+        print(f'{message:12} | {encrypted.hex().upper():32} | {decrypted}')
 
