@@ -5,8 +5,7 @@ class rotor():
 #each one unique
    entryDicts=[{},{},{}]
    exitDicts=[{},{},{}]
-   def __init__(self,strInput):
-      self.strInput = strInput
+   def __init__(self):
       seed(42)
 
       alphabetDict = {'A' : 0, 'B' : 1, 'C' : 2, 'D' : 3, 'E' : 4, 'F' : 5
@@ -82,9 +81,9 @@ class rotor():
     print(self.exitDicts)
     return
 #    def resetRotors
-   def encrypt(self):
+   def encrypt(self, plainText):
         cipherText = ""
-        for char in self.strInput:
+        for char in plainText:
             if(char == " "):
                 cipherText += " "
             else:
@@ -99,25 +98,40 @@ class rotor():
 
                 cipherText += cipherLetter
         return(cipherText)
-   def decrypt(self, str2Decrypt):
+   def decrypt(self, cipherText):
       plainText = ""
-      for char in str2Decrypt:
+      for char in cipherText:
+
         if(char == " "):
             plainText += " "
         else:
-        #    revExit3 = (for )
-           tempNum3 = #need the reverse of each rotor, reverse the dicts
+           revExitRotor3 = {value: key for key,value in self.exitDicts[2].items()} #i use this to reverse the dict, found it out through stack overflow (Very cool stuff)
+           tempNum3 = revExitRotor3[char]
+           revEntryRotor3 = {value: key for key,value in self.entryDicts[2].items()}
+           tempLetter2 = revEntryRotor3[tempNum3]
+
+           revExitRotor2 = {value: key for key,value in self.exitDicts[1].items()}
+           tempNum2 = revExitRotor2[tempLetter2]
+           revEntryRotor2 = {value: key for key,value in self.entryDicts[1].items()}
+           tempLetter1 = revEntryRotor2[tempNum2]
+
+           revExitRotor1 = {value: key for key,value in self.exitDicts[0].items()}
+           tempNum1 = revExitRotor1[tempLetter1]
+           revEntryRotor1 = {value: key for key,value in self.entryDicts[0].items()}
+           plainLetter = revEntryRotor1[tempNum1]
+           plainText += plainLetter
+      return(plainText)
+
 
     
-
-
-    
-        
-         
 
 
 if (__name__ == "__main__"):
       
- instance1 = rotor("TESTING MY ROTORS")
+ instance1 = rotor()
+ cipherText = instance1.encrypt("TESTING MY ROTORS")
+ print(f"Cipher text: {cipherText}")
 
- print(instance1.encrypt())
+
+ pt = instance1.decrypt(cipherText)
+ print(f"Plain text: {pt}")
