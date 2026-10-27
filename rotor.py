@@ -160,6 +160,16 @@ class rotor():
          for numbers, letters in zip(self.numberLists[i], self.letterLists[i]):
             if(letters not in self.exitDicts[i-3]):
                self.exitDicts[i-3][numbers] = letters
+    
+   def updateRevDicts(self):
+      self.revEntryRotor1 = {value: key for key,value in self.entryDicts[0].items()}
+      self.revExitRotor1 = {value: key for key,value in self.exitDicts[0].items()}
+
+      self.revEntryRotor2 = {value: key for key,value in self.entryDicts[1].items()}
+      self.revExitRotor2 = {value: key for key,value in self.exitDicts[1].items()}
+
+      self.revEntryRotor3 = {value: key for key,value in self.entryDicts[2].items()}
+      self.revExitRotor3 = {value: key for key,value in self.exitDicts[2].items()}  
 
 
    def printDicts(self):
@@ -215,6 +225,8 @@ class rotor():
            tempNum1 = self.revExitRotor1[tempLetter1]
            plainLetter = self.revEntryRotor1[tempNum1]
            plainText += plainLetter
+      self.updateRevDicts()
+
       return(plainText)
 
 
